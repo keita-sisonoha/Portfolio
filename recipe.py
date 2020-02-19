@@ -1,23 +1,33 @@
+#osをimportしたのはなんでや？
 import os
+
+#機械学習を行うために「sklearnライブラリ」をインポートします。機械学習全般のアルゴリズムが実装されています。
 from sklearn import datasets
 from sklearn import model_selection
+
+#preprocessingをインポートしたのはなんでや？
 from sklearn import preprocessing
 
-import tensorflow
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_iris
+
+#深層学習(ニューラルネットワーク)のためにtensorflowをインポート[tf]とおく
+import tensorflow as tf
+
+#ニューラルネットワークの構築のためにkerasをインポート
 import keras
 from keras.models import Sequential
 from keras.layers.core import Dense, Activation
 import pandas as pd
-import random
 
-#import seaborn as sns
-import tensorflow as tf
+#数値計算のために「numpy」をインストール *[np]とおく（多次元配列)
 import numpy as np
-import pandas as pd
-#import matplotlib.pyplot as plt
 
-from sklearn.model_selection import train_test_split
-from sklearn.datasets import load_iris
+#表計算のために「pandas」をインストール *[pd]とおく
+import pandas as pd
+
+#乱数を生み出すためにrandomをインポート
+import random
 
 ingredient_df = pd.read_excel("C:/Users/keita/Desktop/portfolio/鶴山さんポートフォリオ原料.xlsx", index_col = 0)
 recipe_df_import_data = pd.read_excel("C:/Users/keita/Desktop/portfolio/鶴山さんポートフォリオ完成.xlsx", index_col = 0)
