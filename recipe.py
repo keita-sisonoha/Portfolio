@@ -38,28 +38,32 @@ recipe_df = recipe_df_import_data.iloc[:,:14]
 recipe_df_ingredient = recipe_df_import_data.iloc[:,14:]
 
 
-#空きリストを作っておく。
+#空のリストを作っておく。
 ingredient_mean_df_list = []
 
 #レシピの数をとってくる
 for number in range(len(recipe_df_ingredient)):
-    #それぞれのレシピの材料をとってくる
+    #それぞれのレシピの材料をリストに格納する
     ingredient_list = [ing for ing in recipe_df_ingredient.iloc[number,:]]
-    #
+    #空のディクトを作っておく
     part_dict = {}
+    #先程作ったレシピ材料のリストから、１つ１つ食材をとってくる
     for part in ingredient_list:
+        #str型にしていする。(欠損値を除くため)
         if type(part) == str:
+　　　　　　　#それぞれの食材のデータを、原材料のデータからとってくる
             data = {part:ingredient_df.loc[part,:].values}
-            
+　　　　　　　#空のディクトに入れる
             part_dict.update(data)
-            
+    #個々の料理に使われている食材データの平均を空のリストに格納する            
     ingredient_mean_df_list.append(pd.DataFrame(part_dict).T.mean())
 
-# 説明変数
+#説明変数を「train_2_x」とする。「train_2_x」は、個々の料理に使われている食材データの平均が格納されたリスト
 train_2_x = pd.DataFrame(ingredient_mean_df_list)
 
-# 目的変数
+#目的変数を「train_2_recipe_df_nan_Y」とする。「train_2_recipe_df_nan_Y」は、個々の料理のデータ(*総合評価のデータのみ除く)
 train_2_recipe_df_nan_Y = recipe_df.drop("総合評価",axis = 1)
+
 
 Flag = True
 
