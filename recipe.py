@@ -64,41 +64,61 @@ train_2_x = pd.DataFrame(ingredient_mean_df_list)
 #目的変数を「train_2_recipe_df_nan_Y」とする。「train_2_recipe_df_nan_Y」は、個々の料理のデータ(*総合評価のデータのみ除く)
 train_2_recipe_df_nan_Y = recipe_df.drop("総合評価",axis = 1)
 
-
+#FlagをTrueとおく。ブーリアン型で表現できるようにするため。
 Flag = True
 
+#空のリストを作っておく。
 input_ingredient_list = []
 
+#空のリストを作っておく。
 input_ingredient_mean_df_list = []
 
+#空のディクトを作っておく。
 input_part_dict = {}
 
+#もし、Flag(true)なら、使用者に具材を入力してもらう。
 while Flag:
     user_input = input("具材を入力してください >>")
+
+　　#使用者が入力した具材が原材料のデータに含まれていたら、その食材を空のリストに格納する
     if user_input in list(ingredient_df.index):
         input_ingredient_list.append(user_input)
+
+　　#使用者が入力した具材が原材料のデータに含まれていなかったら、再度入力をお願いする
     else:
         print("もう一度入力してください。")
+
+　　#他の食材を入力するか、判断してもらう。もし、入力しないを選択した場合、「Flag」を「False」にする。
     another_user_input = input("他の具材を入力する場合は【1】を、終了する場合は【0】を入力してください。 >>")
     if another_user_input == "0":
         Flag = False
 
-for input_part in input_ingredient_list:        
+#入力してもらった食材材を１つ１つ取り出す。
+for input_part in input_ingredient_list:
+　　#入力してもらった食材のデータを、原材料のデータから取り出す。     
     ing_data = {input_part:ingredient_df.loc[input_part,:].values}
+   #空のディクトに格納する
     input_part_dict.update(ing_data)
+
+#入力してもらった食材データの平均をだす。
 otanoshimi_DataFrame = pd.DataFrame(input_part_dict).T.mean()
 
+#空のリストを用意する
 hako = []
+#空のリストを用意する
 hako_model_compile = []
+#空のリストを用意する
 hako_train_test_split = []
+#空のリストを用意する
 l = []
 
+#目的変数のコラムの数を取ってくる。
 for i in range(len(train_2_recipe_df_nan_Y.columns)):
+　　#それぞれの機械学習していく。
     x_2_train, x_2_test, Y_2_train, Y_2_test = train_test_split(train_2_x.values, train_2_recipe_df_nan_Y.iloc[:,i].values, test_size = 0.2)
-    print("debug1", x_2_test)
-
+　　#空のリストに格納する。
     hako_train_test_split.append([x_2_train, x_2_test, Y_2_train, Y_2_test])
-    print("debug2", x_2_test)
+
    
     model_2 = tf.keras.models.Sequential([tf.keras.layers.Dense(13 ,activation = tf.nn.softmax),
                                           tf.keras.layers.Dense(12 ,activation = tf.nn.softmax),
