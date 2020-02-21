@@ -1,13 +1,9 @@
-#osをimportしたのはなんでや？
 import os
 
 #機械学習を行うために「sklearnライブラリ」をインポートします。機械学習全般のアルゴリズムが実装されています。
 from sklearn import datasets
 from sklearn import model_selection
-
-#preprocessingをインポートしたのはなんでや？
 from sklearn import preprocessing
-
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_iris
 
@@ -29,18 +25,27 @@ import pandas as pd
 #乱数を生み出すためにrandomをインポート
 import random
 
+#原材料のデータをエクセルから読み込む
 ingredient_df = pd.read_excel("C:/Users/keita/Desktop/portfolio/鶴山さんポートフォリオ原料.xlsx", index_col = 0)
+
+#料理完成形データをエクセルから読み込む
 recipe_df_import_data = pd.read_excel("C:/Users/keita/Desktop/portfolio/鶴山さんポートフォリオ完成.xlsx", index_col = 0)
+
+#料理完成形データの数値部分だけを抜き取る
 recipe_df = recipe_df_import_data.iloc[:,:14]
+
+#料理完成形データの材料名の部分だけを抜き取る
 recipe_df_ingredient = recipe_df_import_data.iloc[:,14:]
 
-print(recipe_df)
-print(recipe_df_import_data)
 
+#空きリストを作っておく。
 ingredient_mean_df_list = []
 
+#レシピの数をとってくる
 for number in range(len(recipe_df_ingredient)):
+    #それぞれのレシピの材料をとってくる
     ingredient_list = [ing for ing in recipe_df_ingredient.iloc[number,:]]
+    #
     part_dict = {}
     for part in ingredient_list:
         if type(part) == str:
