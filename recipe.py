@@ -101,7 +101,7 @@ for input_part in input_ingredient_list:
     input_part_dict.update(ing_data)
 
 #入力してもらった食材データの平均をだす。
-otanoshimi_DataFrame = pd.DataFrame(input_part_dict).T.mean()
+mean_DataFrame = pd.DataFrame(input_part_dict).T.mean()
 
 #空のリストを用意する
 hako = []
@@ -110,7 +110,7 @@ hako_model_compile = []
 #空のリストを用意する
 hako_train_test_split = []
 #空のリストを用意する
-l = []
+mean_data = []
 
 #目的変数のコラムの数を取ってくる
 for i in range(len(train_2_recipe_df_nan_Y.columns)):
@@ -124,6 +124,7 @@ for i in range(len(train_2_recipe_df_nan_Y.columns)):
                                           tf.keras.layers.Dense(12 ,activation = tf.nn.softmax),
                                           tf.keras.layers.Dense(11 ,activation = tf.nn.softmax),
                                           tf.keras.layers.Dense(11 ,activation = tf.nn.softmax)])
+    
    #モデルを空のリストに格納する
     hako.append([model_2])
     
@@ -144,31 +145,39 @@ for i in range(len(ingredient_df.columns)):
                          verbose = 1,
                          validation_split = 0.8)
 
-    #学習したモデルで、予測していく。                            
-    b = hako[i][0].predict(np.vstack((otanoshimi_DataFrame.values,x_2_test)))[0]
+    #学習したモデルで予測していく。「x_2_test」を縦方向に配列統合することで動かせた。配列の0番目を指定することで「mean_DataFrame.values」だけを予測させた。
+    first_predict = hako[i][0].predict(np.vstack((mean_DataFrame.values,x_2_test)))[0]
 　　#最も高い確率で予想される数値をそれぞれ空のリストに追加する
-    l.append(list(b).index(max(b)))
+    mean_data.append(list(first_predict).index(max(first_predict)))
 
+#ここから2回目の機械学習
+#「train_recipe_df_nan_x」を「説明変数」とする。「train_recipe_df_nan_x」は「recipe_df」から「総合評価のデータを除いた」データ
 train_recipe_df_nan_x = recipe_df.drop("総合評価",axis = 1)
 
+#「train_recipe_df_nan_y」を「目的変数」とする。「train_recipe_df_nan_y」は「recipe_df」の「総合評価」のデータ
 train_recipe_df_nan_y = recipe_df[['総合評価']]
-# float型にしないと「train_test_split」出来なかった。
+
+#float型にしないと「train_test_split」が動かなかった。
 train_recipe_df_nan_x["甘味"] = train_recipe_df_nan_x["甘味"].astype("float64")
 
+#それぞれのtestとtrainに分割する。
 x_train, x_test, y_train, y_test = train_test_split(train_recipe_df_nan_x.values, train_recipe_df_nan_y.values, test_size = 0.2)
 model_rasuto = tf.keras.models.Sequential([tf.keras.layers.Dense(13 ,activation = tf.nn.relu),
                                            tf.keras.layers.Dense(13 ,activation = tf.nn.softmax)])
 
-
+#モデルを定義する
 model_rasuto.compile(optimizer="adam",loss="sparse_categorical_crossentropy",metrics=["accuracy"])
 
+#モデルで学習させていく
 model_rasuto.fit(x_train, y_train,
                  batch_size = 100,
                  epochs = 1000,
                  verbose = 1,
                  validation_split = 0.8)
 
-a = model_rasuto.predict(np.vstack((l,x_test[0])))[0]
+#学習したモデルで、予測していく。「x_test[0]」を縦方向に配列を統合することで動かせた。配列の0番目を指定することで「mean_data」だけを予測させた。
+result_announcement = model_rasuto.predict(np.vstack((mean_data,x_test[0])))[0]
 
-print(list(a).index(max(a)))
+#もっとも確率の高い「総合評価」を出力する
+print(list(result_announcement).index(max(result_announcement)))
 
