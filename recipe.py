@@ -127,13 +127,14 @@ for i in range(len(train_2_recipe_df_nan_Y.columns)):
    #モデルを空のリストに格納する
     hako.append([model_2])
     
-
+　　#モデルを定義する
     hako_model_compile.append(model_2.compile(optimizer="adam",loss="sparse_categorical_crossentropy",metrics=["accuracy"]))
 
-    
+#それぞれのモデルを順に適応させる
 for j in range(len(hako_model_compile)):
     hako[j].append(hako_model_compile[j])
-    
+
+#それぞれのモデルを適応させていく     
 for i in range(len(ingredient_df.columns)):
     hako[i][0]
     hako[i][1]
@@ -143,12 +144,9 @@ for i in range(len(ingredient_df.columns)):
                          verbose = 1,
                          validation_split = 0.8)
 
-                        #  https://www.sejuku.net/blog/72890
-
-    print("debug----------------------")
-    print(otanoshimi_DataFrame.values)                         
-    print(x_2_test[0])
+    #学習したモデルで、予測していく。                            
     b = hako[i][0].predict(np.vstack((otanoshimi_DataFrame.values,x_2_test)))[0]
+　　#最も高い確率で予想される数値をそれぞれ空のリストに追加する
     l.append(list(b).index(max(b)))
 
 train_recipe_df_nan_x = recipe_df.drop("総合評価",axis = 1)
