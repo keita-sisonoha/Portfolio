@@ -112,21 +112,22 @@ hako_train_test_split = []
 #空のリストを用意する
 l = []
 
-#目的変数のコラムの数を取ってくる。
+#目的変数のコラムの数を取ってくる
 for i in range(len(train_2_recipe_df_nan_Y.columns)):
-　　#それぞれの機械学習していく。
+　　#それぞれのtestとtrainに分割する
     x_2_train, x_2_test, Y_2_train, Y_2_test = train_test_split(train_2_x.values, train_2_recipe_df_nan_Y.iloc[:,i].values, test_size = 0.2)
-　　#空のリストに格納する。
+　　#空のリストに格納する
     hako_train_test_split.append([x_2_train, x_2_test, Y_2_train, Y_2_test])
 
-   
+   #それぞれモデルを作る
     model_2 = tf.keras.models.Sequential([tf.keras.layers.Dense(13 ,activation = tf.nn.softmax),
                                           tf.keras.layers.Dense(12 ,activation = tf.nn.softmax),
                                           tf.keras.layers.Dense(11 ,activation = tf.nn.softmax),
                                           tf.keras.layers.Dense(11 ,activation = tf.nn.softmax)])
-    
+   #モデルを空のリストに格納する
     hako.append([model_2])
-        
+    
+
     hako_model_compile.append(model_2.compile(optimizer="adam",loss="sparse_categorical_crossentropy",metrics=["accuracy"]))
 
     
