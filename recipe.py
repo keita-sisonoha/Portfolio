@@ -27,11 +27,11 @@ import random
 
 # 原材料のデータをエクセルから読み込む
 ingredient_df = pd.read_excel(
-    "C:/Users/keita/Desktop/portfolio/鶴山さんポートフォリオ原料.xlsx", index_col=0)
+    "C:/Users/keita/Desktop/portfolio/鶴山ポートフォリオ原料.xlsx", index_col=0)
 
 # 料理完成形データをエクセルから読み込む
 recipe_df_import_data = pd.read_excel(
-    "C:/Users/keita/Desktop/portfolio/鶴山さんポートフォリオ完成.xlsx", index_col=0)
+    "C:/Users/keita/Desktop/portfolio/鶴山ポートフォリオ完成.xlsx", index_col=0)
 
 # 料理完成形データの数値部分だけを抜き取る
 recipe_df = recipe_df_import_data.iloc[:, :14]
