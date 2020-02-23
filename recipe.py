@@ -1,5 +1,3 @@
-import os
-
 # 機械学習を行うために「sklearnライブラリ」をインポートします。機械学習全般のアルゴリズムが実装されています。
 from sklearn import datasets
 from sklearn import model_selection
